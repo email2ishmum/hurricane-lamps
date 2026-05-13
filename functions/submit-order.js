@@ -23,7 +23,7 @@ export async function onRequestPost(context) {
       // 1. Prepare Order Insert
       statements.push(
         env.DB.prepare(
-          "INSERT INTO orders (customer_name, phone, address, quantity, product_name, order_date) VALUES (?, ?, ?, ?, ?, ?)"
+          "INSERT INTO Orders (customer_name, phone, address, quantity, product_name, order_date) VALUES (?, ?, ?, ?, ?, ?)"
         ).bind(customer_name, phone, address, quantity, product_name, orderDate)
       );
 
