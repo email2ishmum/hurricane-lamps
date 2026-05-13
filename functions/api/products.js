@@ -1,4 +1,3 @@
-
 export async function onRequestGet(context) {
   const { env } = context;
 
@@ -15,26 +14,34 @@ export async function onRequestGet(context) {
 
     // 3. Map images to products
     const formattedProducts = products.map(product => {
-      // Parse colors if it's a JSON string in DB
-      let colors = [];
-      try {
-        colors = JSON.parse(product.colors);
-      } catch (e) {
-        colors = product.colors ? product.colors.split(',').map(c => c.trim()) : [];
-      }
-
       // Filter detail images: labels starting with 'd' (d1, d2, d3...)
       const detailImages = images
-        .filter(img => img.product_id === product.id && img.label && img.label.startsWith('d'))
+        .filter(img => img.product_name === product.name && img.label && img.label.startsWith('d'))
         .sort((a, b) => a.label.localeCompare(b.label))
-        .map(img => img.url);
+        .map(img => img.image_url);
+
+      // Parse colors from description or set defaults
+      let colors = [];
+      if (product.description) {
+        // Extract colors from description like "Available in Black, White, Golden..."
+        if (product.description.includes('Available in')) {
+          const colorMatch = product.description.match(/Available in ([^.]+)/);
+          if (colorMatch) {
+            colors = colorMatch[1].split(',').map(c => c.trim());
+          }
+        }
+      }
 
       return {
-        ...product,
-        colors,
-        // Map common variations of the main image column name to 'mainImage'
-        mainImage: product.mainImage || product.image_main || product.main_image,
-        detailImages: detailImages
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        priceDiscount: product.price_discount,
+        priceOriginal: product.price_original,
+        stock: product.stock,
+        mainImage: product.image_main,
+        detailImages: detailImages,
+        colors: colors.length > 0 ? colors : []
       };
     });
 
@@ -48,4 +55,3 @@ export async function onRequestGet(context) {
     });
   }
 }
-
