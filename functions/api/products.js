@@ -1,3 +1,4 @@
+
 export async function onRequestGet(context) {
   const { env } = context;
 
@@ -14,21 +15,25 @@ export async function onRequestGet(context) {
 
     // 3. Map images to products
     const formattedProducts = products.map(product => {
+      // Parse colors if it's a JSON string in DB
+      let colors = [];
+      try {
+        colors = JSON.parse(product.colors);
+      } catch (e) {
+        colors = product.colors ? product.colors.split(',').map(c => c.trim()) : [];
+      }
+
       // Filter detail images: labels starting with 'd' (d1, d2, d3...)
-      // IMPORTANT: Match by product_name, not product_id
       const detailImages = images
-        .filter(img => img.product_name === product.name && img.label && img.label.startsWith('d'))
+        .filter(img => img.product_id === product.id && img.label && img.label.startsWith('d'))
         .sort((a, b) => a.label.localeCompare(b.label))
-        .map(img => img.image_url);
+        .map(img => img.url);
 
       return {
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        price_original: product.price_original,
-        price_discount: product.price_discount,
-        stock: product.stock,
-        mainImage: product.image_main,
+        ...product,
+        colors,
+        // Map common variations of the main image column name to 'mainImage'
+        mainImage: product.mainImage || product.image_main || product.main_image,
         detailImages: detailImages
       };
     });
@@ -43,3 +48,4 @@ export async function onRequestGet(context) {
     });
   }
 }
+
