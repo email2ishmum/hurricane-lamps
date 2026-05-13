@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-black: #1B1B1B;
+  --color-brand-charcoal: #323232;
+  --color-brand-cream: #FFE7D0;
+  --color-brand-orange: #FC6E20;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-bengali: "Hind Siliguri", sans-serif;
+  
+  --shadow-lux: 0 20px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+@layer base {
+  body {
+    @apply bg-brand-cream text-brand-black antialiased;
+  }
+}
+
+@layer components {
+  .rounded-card {
+    @apply rounded-3xl overflow-hidden bg-white border border-brand-black/5 transition-all duration-300;
+  }
+  
+  .pill-btn {
+    @apply bg-brand-orange text-white py-4 px-8 rounded-full font-bold uppercase tracking-widest text-xs transition-opacity hover:opacity-90;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
