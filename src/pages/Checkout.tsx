@@ -44,10 +44,12 @@ export default function Checkout() {
           customer_name: formData.fullName,
           phone: formData.phone,
           address: formData.address,
+          shippingLocation: formData.shippingLocation,
           cartItems: items.map(item => ({
             id: item.id,
             product_name: `${item.name} (${item.selectedColor})`,
-            quantity: item.quantity
+            quantity: item.quantity,
+            price: item.priceDiscount
           }))
         }),
       });

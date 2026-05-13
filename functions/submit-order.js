@@ -4,7 +4,7 @@ export async function onRequestPost(context) {
 
   try {
     const data = await request.json();
-    const { customer_name, phone, address, cartItems } = data;
+    const { customer_name, phone, address, cartItems, shippingLocation } = data;
 
     // Basic server-side validation
     if (!customer_name || !phone || !address || !cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
@@ -14,23 +14,33 @@ export async function onRequestPost(context) {
       });
     }
 
+    // Calculate totals
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    // Shipping logic: 2+ items = 0, else based on location
+    const shippingCost = totalItems >= 2 ? 0 : (shippingLocation === 'dhaka' ? 80 : 120);
+    const totalAmount = subtotal + shippingCost;
+
     const statements = [];
     const orderDate = new Date().toISOString();
 
     for (const item of cartItems) {
       const { quantity, product_name, id: productId } = item;
 
-      // 1. Prepare Order Insert
+      // 1. Prepare Order Insert (including total_amount)
+      // Note: We'll store the total_amount on each record for this batch, or could have a separate orders_summary table
+      // But the user asked to save total_amount to the Orders table.
       statements.push(
         env.DB.prepare(
-          "INSERT INTO Orders (customer_name, phone, address, quantity, product_name, order_date) VALUES (?, ?, ?, ?, ?, ?)"
-        ).bind(customer_name, phone, address, quantity, product_name, orderDate)
+          "INSERT INTO orders (customer_name, phone, address, quantity, product_name, order_date, total_amount) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        ).bind(customer_name, phone, address, quantity, product_name, orderDate, totalAmount)
       );
 
       // 2. Prepare Stock Update (in 'products' table)
       statements.push(
         env.DB.prepare(
-          "UPDATE Products SET stock = stock - ? WHERE id = ?"
+          "UPDATE products SET stock = stock - ? WHERE id = ?"
         ).bind(quantity, productId)
       );
     }

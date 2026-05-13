@@ -9,18 +9,29 @@ export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addItem } = useCart();
-  const product = PRODUCTS.find(p => p.id === id);
   
-  const [activeImage, setActiveImage] = useState(product?.mainImage || '');
-  const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || '');
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeImage, setActiveImage] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
 
   useEffect(() => {
-    if (product) {
-      setActiveImage(product.mainImage);
-      setSelectedColor(product.colors[0]);
-    }
+    setLoading(true);
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        const found = data.find((p: any) => p.id === id || String(p.id) === id);
+        if (found) {
+          setProduct(found);
+          setActiveImage(found.mainImage);
+          setSelectedColor(found.colors[0]);
+        }
+      })
+      .catch(err => console.error('Error fetching product:', err))
+      .finally(() => setLoading(false));
+    
     window.scrollTo(0, 0);
-  }, [product?.id]);
+  }, [id]);
 
   const handleOrderNow = () => {
     if (product) {
@@ -28,6 +39,14 @@ export default function ProductDetail() {
       navigate('/checkout');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-orange" />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -75,6 +94,11 @@ export default function ProductDetail() {
                 loading="eager"
               />
             </AnimatePresence>
+            {product.stock === 0 && (
+              <div className="absolute top-8 left-8 bg-red-600 text-white text-xs font-bold px-6 py-2 rounded-full uppercase tracking-[0.2em] shadow-2xl z-10">
+                Out of Stock
+              </div>
+            )}
           </motion.div>
 
           <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
@@ -170,14 +194,14 @@ export default function ProductDetail() {
               onClick={() => product && addItem(product, selectedColor)}
               className="flex-1 py-5 bg-brand-cream border-2 border-brand-black text-brand-black text-xs font-bold uppercase tracking-[0.2em] rounded-full hover:bg-brand-black hover:text-brand-cream transition-all duration-300 flex items-center justify-center gap-3"
             >
-              Add to Bag
+              {product.stock === 0 ? 'PRE-ORDER' : 'Add to Bag'}
               <ShoppingBag size={16} />
             </button>
             <button 
               onClick={handleOrderNow}
               className="flex-1 pill-btn shadow-xl shadow-brand-orange/20 flex items-center justify-center gap-3 group"
             >
-              Order Now
+              {product.stock === 0 ? 'PRE-ORDER NOW' : 'Order Now'}
               <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

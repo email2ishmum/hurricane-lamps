@@ -1,9 +1,25 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { PRODUCTS, HERO_IMAGE, ALL_DETAIL_IMAGES } from '../constants';
+import { HERO_IMAGE, ALL_DETAIL_IMAGES } from '../constants';
 import { ArrowRight } from 'lucide-react';
 
 export default function Home() {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setProducts(data);
+        }
+      })
+      .catch(err => console.error('Failed to fetch products:', err))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="pt-20">
       {/* Announcement Bar */}
@@ -71,45 +87,56 @@ export default function Home() {
 
       {/* Product Grid */}
       <section id="collection" className="py-24 max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-          {PRODUCTS.map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group"
-            >
-                <Link to={`/product/${product.id}`} className="block rounded-card aspect-square relative shadow-sm hover:shadow-lux hover:-translate-y-1">
-                  <img 
-                    src={product.mainImage || null} 
-                    alt={product.name} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    referrerPolicy="no-referrer"
-                    loading={index < 4 ? "eager" : "lazy"}
-                  />
-                </Link>
-              <div className="mt-4 space-y-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-[10px] md:text-xs font-bold uppercase tracking-widest leading-tight">{product.name}</h3>
-                    <p className="text-brand-orange font-bold text-xs md:text-sm">BDT {product.priceDiscount}</p>
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-orange" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+            {products.map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group"
+              >
+                  <Link to={`/product/${product.id}`} className="block rounded-card aspect-square relative shadow-sm hover:shadow-lux hover:-translate-y-1 overflow-hidden">
+                    <img 
+                      src={product.mainImage || null} 
+                      alt={product.name} 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      referrerPolicy="no-referrer"
+                      loading={index < 4 ? "eager" : "lazy"}
+                    />
+                    {product.stock === 0 && (
+                      <div className="absolute top-4 left-4 bg-red-600 text-white text-[8px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                        Out of Stock
+                      </div>
+                    )}
+                  </Link>
+                <div className="mt-4 space-y-3">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-[10px] md:text-xs font-bold uppercase tracking-widest leading-tight">{product.name}</h3>
+                      <p className="text-brand-orange font-bold text-xs md:text-sm">BDT {product.priceDiscount}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[8px] md:text-[10px] text-brand-charcoal/40 line-through font-bold">BDT {product.priceOriginal}</p>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-[8px] md:text-[10px] text-brand-charcoal/40 line-through font-bold">BDT {product.priceOriginal}</p>
-                  </div>
+                  <Link 
+                    to={`/product/${product.id}`}
+                    className={`block w-full pt-[12px] h-[38px] ${product.stock === 0 ? 'bg-brand-charcoal' : 'bg-brand-black'} text-brand-cream text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-center rounded-full hover:bg-brand-orange transition-colors`}
+                  >
+                    {product.stock === 0 ? 'PRE-ORDER' : 'Order Now'}
+                  </Link>
                 </div>
-                <Link 
-                  to={`/product/${product.id}`}
-                  className="block w-full pt-[12px] h-[38px] bg-brand-black text-brand-cream text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-center rounded-full hover:bg-brand-orange transition-colors"
-                >
-                  Order Now
-                </Link>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Scrollable Gallery */}
