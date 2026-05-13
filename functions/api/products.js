@@ -12,7 +12,39 @@ export async function onRequestGet(context) {
       "SELECT * FROM product_images"
     ).all();
 
-    // 3. Map images to products
+    // 3. Helper function to extract colors
+    const getColors = (name, description) => {
+      // Try to parse from description first
+      if (description && description.includes('Available in')) {
+        const match = description.match(/Available in (.+?)(?:\.|$)/);
+        if (match) {
+          return match[1]
+            .split(',')
+            .map(c => c.trim())
+            .map(c => c.replace(/^and\s+/, ''))
+            .filter(c => c.length > 0);
+        }
+      }
+
+      // Extract color from description if it's just one color
+      // e.g., "Minimalist White" -> "White"
+      const colorKeywords = ['White', 'Black', 'Golden', 'Silver', 'Orange', 'Green', 'Red', 'Blue', 'Gold'];
+      for (const color of colorKeywords) {
+        if (description && description.includes(color)) {
+          return [color];
+        }
+      }
+
+      // Fallback: guess from product name/description
+      if (name === 'Irium') return ['Black', 'White', 'Golden', 'Silver', 'Rose Gold'];
+      if (description.includes('White')) return ['White'];
+      if (description.includes('Green')) return ['Sea Green'];
+      if (description.includes('Orange')) return ['Orange'];
+      
+      return ['Default'];
+    };
+
+    // 4. Map images to products
     const formattedProducts = products.map(product => {
       // Filter detail images: labels starting with 'd' (d1, d2, d3...)
       const detailImages = images
@@ -20,28 +52,18 @@ export async function onRequestGet(context) {
         .sort((a, b) => a.label.localeCompare(b.label))
         .map(img => img.image_url);
 
-      // Parse colors from description or set defaults
-      let colors = [];
-      if (product.description) {
-        // Extract colors from description like "Available in Black, White, Golden..."
-        if (product.description.includes('Available in')) {
-          const colorMatch = product.description.match(/Available in ([^.]+)/);
-          if (colorMatch) {
-            colors = colorMatch[1].split(',').map(c => c.trim());
-          }
-        }
-      }
+      const colors = getColors(product.name, product.description);
 
       return {
         id: product.id,
         name: product.name,
         description: product.description,
-        priceDiscount: product.price_discount,
-        priceOriginal: product.price_original,
-        stock: product.stock,
+        priceDiscount: product.price_discount || 0,
+        priceOriginal: product.price_original || 0,
+        stock: product.stock || 0,
         mainImage: product.image_main,
         detailImages: detailImages,
-        colors: colors.length > 0 ? colors : []
+        colors: colors
       };
     });
 
