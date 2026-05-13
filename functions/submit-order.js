@@ -30,7 +30,7 @@ export async function onRequestPost(context) {
       // 2. Prepare Stock Update (in 'products' table)
       statements.push(
         env.DB.prepare(
-          "UPDATE products SET stock = stock - ? WHERE id = ?"
+          "UPDATE Products SET stock = stock - ? WHERE id = ?"
         ).bind(quantity, productId)
       );
     }
