@@ -110,11 +110,6 @@ export default function Home() {
                       referrerPolicy="no-referrer"
                       loading={index < 4 ? "eager" : "lazy"}
                     />
-                    {product.stock === 0 && (
-                      <div className="absolute top-4 left-4 bg-red-600 text-white text-[8px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
-                        Out of Stock
-                      </div>
-                    )}
                   </Link>
                 <div className="mt-4 space-y-3">
                   <div className="flex justify-between items-start">

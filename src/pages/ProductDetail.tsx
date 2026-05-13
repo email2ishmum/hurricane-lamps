@@ -94,11 +94,6 @@ export default function ProductDetail() {
                 loading="eager"
               />
             </AnimatePresence>
-            {product.stock === 0 && (
-              <div className="absolute top-8 left-8 bg-red-600 text-white text-xs font-bold px-6 py-2 rounded-full uppercase tracking-[0.2em] shadow-2xl z-10">
-                Out of Stock
-              </div>
-            )}
           </motion.div>
 
           <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
@@ -115,11 +110,6 @@ export default function ProductDetail() {
                   referrerPolicy="no-referrer" 
                   loading="lazy"
                 />
-                {img === product.mainImage && (
-                  <div className="absolute top-1 left-1 bg-brand-orange text-white text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter">
-                    Main
-                  </div>
-                )}
               </button>
             ))}
           </div>
