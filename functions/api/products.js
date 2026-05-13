@@ -15,6 +15,7 @@ export async function onRequestGet(context) {
     // 3. Map images to products
     const formattedProducts = products.map(product => {
       // Filter detail images: labels starting with 'd' (d1, d2, d3...)
+      // IMPORTANT: Match by product_name, not product_id
       const detailImages = images
         .filter(img => img.product_name === product.name && img.label && img.label.startsWith('d'))
         .sort((a, b) => a.label.localeCompare(b.label))
@@ -27,7 +28,7 @@ export async function onRequestGet(context) {
         price_original: product.price_original,
         price_discount: product.price_discount,
         stock: product.stock,
-        image_main: product.image_main,
+        mainImage: product.image_main,
         detailImages: detailImages
       };
     });
