@@ -30,7 +30,7 @@ export default function Checkout() {
   const shippingCost = hasFreeDelivery ? 0 : (formData.shippingLocation === 'dhaka' ? 80 : 120);
   const finalTotal = subtotal + shippingCost;
 
-  const handleSubmit = async (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
@@ -44,16 +44,11 @@ export default function Checkout() {
           customer_name: formData.fullName,
           phone: formData.phone,
           address: formData.address,
-          items: items.map(item => ({
+          cartItems: items.map(item => ({
             id: item.id,
-            name: item.name,
-            color: item.selectedColor,
-            quantity: item.quantity,
-            price: item.priceDiscount
-          })),
-          subtotal,
-          shipping_cost: shippingCost,
-          final_total: finalTotal
+            product_name: `${item.name} (${item.selectedColor})`,
+            quantity: item.quantity
+          }))
         }),
       });
 
@@ -85,10 +80,13 @@ export default function Checkout() {
             <CheckCircle className="text-brand-orange" size={40} />
           </div>
           <h2 className="text-4xl font-bold tracking-tighter uppercase mb-4 text-brand-black">ধন্যবাদ / THANK YOU</h2>
-          <p className="text-brand-charcoal/60 mb-10 text-sm uppercase tracking-widest leading-relaxed">
+          <p className="text-brand-charcoal/60 mb-2 text-sm uppercase tracking-widest leading-relaxed">
             আপনার অর্ডারটি গ্রহণ করা হয়েছে। <br />
             যাচাইকরণের জন্য আমরা আপনাকে কল করব। <br />
             We will call you for verification.
+          </p>
+          <p className="text-brand-orange font-bold text-xs uppercase tracking-widest mb-10">
+            Order confirmed for: {formData.phone}
           </p>
 
           <div className="bg-brand-black/5 p-6 rounded-2xl mb-10 text-left">
