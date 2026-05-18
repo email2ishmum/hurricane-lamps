@@ -84,7 +84,7 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
-export const HERO_IMAGE = 'https://i.ibb.co.com/gLJ2h9Yb/hero-1.png';
+export const HERO_IMAGE = 'https://i.ibb.co.com/8nJtYy5j/hero-1.webp';
 
 // Aggregating all detail images for the Home Page gallery
 export const ALL_DETAIL_IMAGES = PRODUCTS.flatMap(p => p.detailImages);
