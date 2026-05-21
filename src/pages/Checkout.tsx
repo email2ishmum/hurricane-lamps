@@ -54,11 +54,20 @@ export default function Checkout() {
         }),
       });
 
-      if (response.ok) {
-        setOrderedItems([...items]);
-        setIsSuccess(true);
-        clearCart();
-      } else {
+if (response.ok) {
+  setOrderedItems([...items]);
+
+  // Track dynamic purchase event in Zaraz safely for TypeScript
+  if (typeof window !== 'undefined' && (window as any).zaraz) {
+    (window as any).zaraz.track("Purchase", {
+      value: finalTotal,
+      currency: "BDT"
+    });
+  }
+
+  setIsSuccess(true);
+  clearCart();
+} else {
         const errData = await response.json().catch(() => ({}));
         alert(`Order failed: ${errData.error || 'Please try again later'}`);
       }
