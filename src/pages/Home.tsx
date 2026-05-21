@@ -33,26 +33,26 @@ export default function Home() {
   return (
     <div className="pt-20">
       {/* Announcement Bar */}
-      <div className="bg-brand-orange overflow-hidden whitespace-nowrap py-3 md:py-4 flex relative">
+      <div className="bg-brand-orange overflow-hidden whitespace-nowrap py-2 flex relative">
         <motion.div 
           animate={{ x: ["0%", "-50%"] }}
-          transition={{ repeat: Infinity, duration: 50, ease: "linear" }}
-          className="flex gap-8 md:gap-16"
+          transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+          className="flex gap-12"
         >
-          {[1, 2, 3, 4].map((i) => (
-            <span key={i} className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-white flex-shrink-0">
-              ✨ GET FREE DELIVERY IF YOU BUY 2 ITEMS • LIMITED STOCK
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <span key={i} className="text-[10px] font-bold uppercase tracking-[0.3em] text-white">
+              GET FREE DELIVERY IF YOU BUY 2 ITEMS • LIMITED STOCK AVAILABLE
             </span>
           ))}
         </motion.div>
         <motion.div 
           animate={{ x: ["0%", "-50%"] }}
-          transition={{ repeat: Infinity, duration: 50, ease: "linear" }}
-          className="flex gap-8 md:gap-16"
+          transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+          className="flex gap-12"
         >
-          {[1, 2, 3, 4].map((i) => (
-            <span key={i} className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] text-white flex-shrink-0">
-              ✨ GET FREE DELIVERY IF YOU BUY 2 ITEMS • LIMITED STOCK
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <span key={i} className="text-[10px] font-bold uppercase tracking-[0.3em] text-white">
+              GET FREE DELIVERY IF YOU BUY 2 ITEMS • LIMITED STOCK AVAILABLE
             </span>
           ))}
         </motion.div>
