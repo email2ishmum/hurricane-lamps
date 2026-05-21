@@ -3,10 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ShoppingBag, ChevronLeft, CheckCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { setOGTags } from '../utils/seo';
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, subtotal, totalItems, clearCart } = useCart();
+
+  useEffect(() => {
+    setOGTags({
+      title: 'Checkout | Hurricane Lamps',
+      description: 'Complete your purchase of handcrafted hurricane lamps from Hurricane Lamps.',
+      image: 'https://i.ibb.co.com/8nJtYy5j/hero-1.webp',
+      url: 'https://hurricane-lamps.com/checkout',
+      type: 'website',
+    });
+  }, []);
   
   const [formData, setFormData] = useState({
     fullName: '',

@@ -1,9 +1,21 @@
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import { setOGTags } from '../utils/seo';
 
 export default function ReturnPolicy() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setOGTags({
+      title: 'Return Policy | Hurricane Lamps',
+      description: 'Read our return policy for Hurricane Lamps products. Easy returns and customer satisfaction guaranteed.',
+      image: 'https://i.ibb.co.com/8nJtYy5j/hero-1.webp',
+      url: 'https://hurricane-lamps.com/return-policy',
+      type: 'website',
+    });
+  }, []);
 
   return (
     <div className="pt-32 pb-24 max-w-4xl mx-auto px-4">
