@@ -4,8 +4,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useCart } from '../context/CartContext';
 import { PRODUCTS } from '../constants';
 import { ShoppingBag, ChevronRight, ArrowLeft, Info, CheckCircle2 } from 'lucide-react';
-import { setOGTags } from '../utils/seo';
-import { setOGTags } from '../utils/seo';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -27,15 +25,6 @@ export default function ProductDetail() {
           setProduct(found);
           setActiveImage(found.mainImage);
           setSelectedColor(found.colors[0]);
-          
-          // Set product-specific OG tags
-          setOGTags({
-            title: `${found.name} | Hurricane Lamps`,
-            description: found.description || `Beautiful ${found.name} from Hurricane Lamps`,
-            image: found.mainImage,
-            url: `https://hurricane-lamps.com/product/${id}`,
-            type: 'product',
-          });
         }
       })
       .catch(err => console.error('Error fetching product:', err))

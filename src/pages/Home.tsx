@@ -3,22 +3,12 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { HERO_IMAGE, ALL_DETAIL_IMAGES } from '../constants';
 import { ArrowRight } from 'lucide-react';
-import { setOGTags } from '../utils/seo';
 
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set OG tags for home page
-    setOGTags({
-      title: 'Hurricane Lamps | Modern Illumination',
-      description: 'Distinctive hurricane lamps for modern spaces. Handcrafted elegance delivered across Bangladesh.',
-      image: 'https://i.ibb.co.com/8nJtYy5j/hero-1.webp',
-      url: 'https://hurricane-lamps.com',
-      type: 'website',
-    });
-
     fetch('/api/products')
       .then(res => res.json())
       .then(data => {
