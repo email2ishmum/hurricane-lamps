@@ -1,4 +1,3 @@
-
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -48,6 +47,31 @@ export async function onRequestPost(context) {
     // Execute all statements in a batch
     await env.DB.batch(statements);
 
+    // Send Discord notification
+    const discordWebhook = "https://ptb.discord.com/api/webhooks/1512019248044839054/yRQTPuSOZ7AR_-4Ge33U-qLXH3C3T4K1Kce_nU5C8-MzxsdC5GrqCptHPUGllBRAl-Ig";
+    const productList = cartItems.map(item => `${item.product_name} (x${item.quantity})`).join(", ");
+    
+    await fetch(discordWebhook, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: "🎉 **New Order!**",
+        embeds: [{
+          color: 16733728, // #FC6E20 (ur brand orange)
+          fields: [
+            { name: "Customer", value: customer_name, inline: true },
+            { name: "Phone", value: phone, inline: true },
+            { name: "Products", value: productList, inline: false },
+            { name: "Subtotal", value: `৳${subtotal}`, inline: true },
+            { name: "Shipping", value: `৳${shippingCost}`, inline: true },
+            { name: "Total", value: `৳${totalAmount}`, inline: true },
+            { name: "Address", value: address, inline: false }
+          ],
+          timestamp: new Date().toISOString()
+        }]
+      })
+    }).catch(err => console.error("Discord webhook failed:", err));
+
     return new Response(JSON.stringify({ 
       success: true, 
       message: `Order placed successfully for ${phone}` 
@@ -58,6 +82,9 @@ export async function onRequestPost(context) {
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
+    });
+  }
+}
     });
   }
 }
