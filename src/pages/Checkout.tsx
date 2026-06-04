@@ -19,8 +19,13 @@ export default function Checkout() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderedItems, setOrderedItems] = useState(items);
   
-// Track InitiateCheckout when the checkout page loads
-  React.useEffect(() => {
+  // Calculate shipping & total
+  const hasFreeDelivery = totalItems >= 2;
+  const shippingCost = hasFreeDelivery ? 0 : (formData.shippingLocation === 'dhaka' ? 80 : 120);
+  const finalTotal = subtotal + shippingCost;
+
+  // Track InitiateCheckout when the checkout page loads
+  useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).zaraz) {
       (window as any).zaraz.track("InitiateCheckout", {
         value: finalTotal,
@@ -28,19 +33,16 @@ export default function Checkout() {
       });
     }
   }, [finalTotal]);
-  
-  React.useEffect(() => {
+
+  // Redirect if cart is empty and not on success page
+  useEffect(() => {
     if (items.length === 0 && !isSuccess) {
       navigate('/');
     }
     window.scrollTo(0, 0);
   }, [items.length, navigate, isSuccess]);
 
-  const hasFreeDelivery = totalItems >= 2;
-  const shippingCost = hasFreeDelivery ? 0 : (formData.shippingLocation === 'dhaka' ? 80 : 120);
-  const finalTotal = subtotal + shippingCost;
-
-    const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
@@ -64,20 +66,20 @@ export default function Checkout() {
         }),
       });
 
-if (response.ok) {
-  setOrderedItems([...items]);
+      if (response.ok) {
+        setOrderedItems([...items]);
 
-  // Track dynamic purchase event in Zaraz safely for TypeScript
-  if (typeof window !== 'undefined' && (window as any).zaraz) {
-    (window as any).zaraz.track("Purchase", {
-      value: finalTotal,
-      currency: "BDT"
-    });
-  }
+        // Track dynamic purchase event in Zaraz safely for TypeScript
+        if (typeof window !== 'undefined' && (window as any).zaraz) {
+          (window as any).zaraz.track("Purchase", {
+            value: finalTotal,
+            currency: "BDT"
+          });
+        }
 
-  setIsSuccess(true);
-  clearCart();
-} else {
+        setIsSuccess(true);
+        clearCart();
+      } else {
         const errData = await response.json().catch(() => ({}));
         alert(`Order failed: ${errData.error || 'Please try again later'}`);
       }
@@ -252,55 +254,55 @@ if (response.ok) {
         {/* Summary Section */}
         <aside className="lg:sticky lg:top-32 space-y-12">
           <div className="bg-brand-black text-brand-cream p-8 md:p-12 rounded-[3.5rem] relative overflow-hidden shadow-2xl">
-             <div className="relative z-10">
-               <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] mb-10 opacity-40">Order Summary</h3>
-               
-               <div className="max-h-[300px] overflow-y-auto space-y-6 pr-2 mb-10 scrollbar-thin scrollbar-thumb-brand-cream/10">
-                 {items.map((item, idx) => (
-                   <div key={idx} className="flex gap-4 pb-6 border-b border-brand-cream/10 last:border-0 last:pb-0">
-                     <div className="w-16 h-20 rounded-xl overflow-hidden bg-brand-charcoal flex-none shadow-lg">
-                        <img src={item.mainImage} alt={item.name} className="w-full h-full object-cover" />
-                     </div>
-                     <div className="flex-1 flex flex-col justify-between py-1">
-                        <div>
-                          <h4 className="text-sm font-bold uppercase tracking-tight">{item.name}</h4>
-                          <p className="text-[9px] uppercase tracking-widest opacity-50">{item.selectedColor}</p>
-                        </div>
-                        <div className="flex justify-between items-end">
-                          <p className="text-[9px] opacity-30 tracking-widest uppercase">Qty: {item.quantity}</p>
-                          <span className="text-xs font-bold text-brand-orange">BDT {item.priceDiscount * item.quantity}</span>
-                        </div>
-                     </div>
-                   </div>
-                 ))}
-               </div>
+            <div className="relative z-10">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.3em] mb-10 opacity-40">Order Summary</h3>
+              
+              <div className="max-h-[300px] overflow-y-auto space-y-6 pr-2 mb-10 scrollbar-thin scrollbar-thumb-brand-cream/10">
+                {items.map((item, idx) => (
+                  <div key={idx} className="flex gap-4 pb-6 border-b border-brand-cream/10 last:border-0 last:pb-0">
+                    <div className="w-16 h-20 rounded-xl overflow-hidden bg-brand-charcoal flex-none shadow-lg">
+                      <img src={item.mainImage} alt={item.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 flex flex-col justify-between py-1">
+                      <div>
+                        <h4 className="text-sm font-bold uppercase tracking-tight">{item.name}</h4>
+                        <p className="text-[9px] uppercase tracking-widest opacity-50">{item.selectedColor}</p>
+                      </div>
+                      <div className="flex justify-between items-end">
+                        <p className="text-[9px] opacity-30 tracking-widest uppercase">Qty: {item.quantity}</p>
+                        <span className="text-xs font-bold text-brand-orange">BDT {item.priceDiscount * item.quantity}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-               <div className="space-y-4 pt-6 border-t border-brand-cream/20">
-                  <div className="flex justify-between text-[10px] tracking-widest uppercase">
-                    <span className="opacity-40">Subtotal</span>
-                    <span className="font-bold">BDT {subtotal}</span>
-                  </div>
-                  <div className="flex justify-between text-[10px] tracking-widest uppercase">
-                    <span className="opacity-40">Shipping</span>
-                    <span className={`font-bold ${hasFreeDelivery ? 'text-brand-orange' : ''}`}>
-                      {hasFreeDelivery ? 'FREE' : `BDT ${shippingCost}`}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-2xl font-bold tracking-tighter pt-8 uppercase">
-                    <span>Total</span>
-                    <span>BDT {finalTotal}</span>
-                  </div>
-               </div>
-             </div>
-             
-             <div className="absolute -top-24 -right-24 w-64 h-64 bg-brand-orange/10 rounded-full blur-[80px]" />
+              <div className="space-y-4 pt-6 border-t border-brand-cream/20">
+                <div className="flex justify-between text-[10px] tracking-widest uppercase">
+                  <span className="opacity-40">Subtotal</span>
+                  <span className="font-bold">BDT {subtotal}</span>
+                </div>
+                <div className="flex justify-between text-[10px] tracking-widest uppercase">
+                  <span className="opacity-40">Shipping</span>
+                  <span className={`font-bold ${hasFreeDelivery ? 'text-brand-orange' : ''}`}>
+                    {hasFreeDelivery ? 'FREE' : `BDT ${shippingCost}`}
+                  </span>
+                </div>
+                <div className="flex justify-between text-2xl font-bold tracking-tighter pt-8 uppercase">
+                  <span>Total</span>
+                  <span>BDT {finalTotal}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-brand-orange/10 rounded-full blur-[80px]" />
           </div>
 
           <div className="bg-brand-cream/10 p-8 rounded-[2.5rem] border border-brand-black/5 flex items-start gap-4">
-             <ShoppingBag className="text-brand-orange mt-1 flex-none" size={20} />
-             <p className="text-[9px] uppercase tracking-[0.2em] opacity-60 leading-relaxed italic">
-               "Your collection grows, and soon your space will glow with Hurricane's warmth."
-             </p>
+            <ShoppingBag className="text-brand-orange mt-1 flex-none" size={20} />
+            <p className="text-[9px] uppercase tracking-[0.2em] opacity-60 leading-relaxed italic">
+              "Your collection grows, and soon your space will glow with Hurricane's warmth."
+            </p>
           </div>
         </aside>
       </div>
