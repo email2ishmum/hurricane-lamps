@@ -20,7 +20,7 @@ export default function Checkout() {
   const [orderedItems, setOrderedItems] = useState(items);
   
 // Track InitiateCheckout when the checkout page loads
-  useEffect(() => {
+  React.useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).zaraz) {
       (window as any).zaraz.track("InitiateCheckout", {
         value: finalTotal,
