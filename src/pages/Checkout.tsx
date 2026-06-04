@@ -29,7 +29,7 @@ export default function Checkout() {
     }
   }, [finalTotal]);
   
-  useEffect(() => {
+  React.useEffect(() => {
     if (items.length === 0 && !isSuccess) {
       navigate('/');
     }
