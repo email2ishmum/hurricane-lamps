@@ -68,22 +68,22 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-t from-brand-black/60 via-transparent to-transparent" />
       </section>
 
-      {/* Slogan Section */}
-      <section className="pt-[40px] h-[230px] max-w-7xl mx-auto px-4 border-b border-brand-black/5">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl"
-        >
-          <h2 className="text-4xl md:text-8xl font-bold tracking-tighter text-brand-black leading-[0.9] mb-6 uppercase">
-            WHERE LIGHT <br /> MEETS <span className="text-brand-orange italic">EMOTION.</span>
-          </h2>
-          <p className="text-brand-charcoal/60 text-xs md:text-sm max-w-xs md:max-w-md font-medium tracking-[0.2em] uppercase leading-relaxed">
-            Thoughtful designs that blends aesthetics with functions to brighten your space.
-          </p>
-        </motion.div>
-      </section>
+     {/* Slogan Section */}
+<section className="pt-4 pb-4 md:pt-8 md:pb-8 max-w-7xl mx-auto px-4 border-b border-brand-black/5">
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    className="max-w-4xl"
+  >
+    <h2 className="text-3xl md:text-8xl font-bold tracking-tighter text-brand-black leading-[0.9] mb-3 md:mb-6 uppercase">
+      WHERE LIGHT <br /> MEETS <span className="text-brand-orange italic">EMOTION.</span>
+    </h2>
+    <p className="text-brand-charcoal/60 text-[10px] md:text-sm max-w-[260px] md:max-w-md font-medium tracking-[0.12em] md:tracking-[0.2em] uppercase leading-relaxed">
+      Thoughtful designs that blends aesthetics with functions to brighten your space.
+    </p>
+  </motion.div>
+</section>
 
       {/* Product Grid */}
       <section id="collection" className="py-24 max-w-7xl mx-auto px-4">
