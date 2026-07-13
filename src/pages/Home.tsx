@@ -86,7 +86,7 @@ export default function Home() {
 </section>
 
       {/* Product Grid */}
-      <section id="collection" className="py-24 max-w-7xl mx-auto px-4">
+      <section id="collection" className="pt-6 pb-12 md:py-24 max-w-7xl mx-auto px-4">
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-brand-orange" />
