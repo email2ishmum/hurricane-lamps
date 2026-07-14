@@ -167,35 +167,7 @@ export default function Home() {
         </div>
       </section>
       
-      {/* Newsletter / CTA */}
-      <section className="pt-[18px] pb-24 h-[464px] max-w-7xl mx-auto px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="pt-6 bg-brand-charcoal text-brand-cream p-12 md:p-24 rounded-[4rem] relative overflow-hidden"
-        >
-          <div className="relative z-10">
-            <h2 className="w-[232px] mx-auto text-4xl md:text-6xl font-bold tracking-tighter mb-8 leading-none">JOIN THE <br /> UNDERGROUND</h2>
-            <p className="text-brand-cream/60 max-w-md mx-auto mb-10 text-sm md:text-base leading-relaxed uppercase tracking-wider">
-              Subscribe to get notified about new limited editions and exclusive drops.
-            </p>
-            <form className="max-w-md mx-auto flex flex-col md:flex-row gap-4" onSubmit={(e) => e.preventDefault()}>
-              <input 
-                type="email" 
-                placeholder="EMAIL ADDRESS" 
-                className="flex-1 bg-brand-black/20 border border-brand-cream/20 px-6 py-4 rounded-full text-xs tracking-widest focus:border-brand-orange outline-none transition-colors"
-                required
-              />
-              <button className="bg-brand-orange text-brand-black font-bold uppercase tracking-widest px-8 py-4 rounded-full hover:bg-brand-cream transition-colors text-xs whitespace-nowrap">
-                Subscribe
-              </button>
-            </form>
-          </div>
-          <div className="absolute top-0 right-0 w-64 h-[252px] bg-brand-orange/10 blur-[100px] rounded-full" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-orange/5 blur-[100px] rounded-full" />
-        </motion.div>
-      </section>
+      
     </div>
   );
 }
