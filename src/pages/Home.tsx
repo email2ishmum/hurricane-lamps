@@ -49,7 +49,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative h-[34vh] min-h-[240px] md:h-[65vh] lg:h-[75vh] overflow-hidden bg-brand-black">
+      <section className="relative h-[42vh] min-h-[280px] md:h-[72vh] lg:h-[82vh] overflow-hidden bg-brand-black">
         <motion.div 
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
