@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useCart } from '../context/CartContext';
 import { PRODUCTS } from '../constants';
 import { ShoppingBag, ChevronRight, ArrowLeft, Info, CheckCircle2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -203,6 +205,51 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {/* Long Description (Markdown) */}
+      {product.longDescription && (
+        <div className="mt-16 lg:mt-24 max-w-4xl">
+          <div className="rounded-card p-8 sm:p-12 bg-white">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h1: ({ children }) => (
+                  <h2 className="text-3xl font-bold tracking-tighter uppercase text-brand-black mb-1">
+                    {children}
+                  </h2>
+                ),
+                h3: ({ children }) => (
+                  <h3 className="text-[10px] uppercase tracking-[0.3em] font-bold opacity-40 mt-10 mb-4">
+                    {children}
+                  </h3>
+                ),
+                em: ({ children }) => (
+                  <span className="block italic text-brand-orange font-medium text-sm mb-6">
+                    {children}
+                  </span>
+                ),
+                p: ({ children }) => (
+                  <p className="text-brand-charcoal leading-relaxed text-sm opacity-90 mb-4">
+                    {children}
+                  </p>
+                ),
+                ul: ({ children }) => <ul className="space-y-2 pl-1">{children}</ul>,
+                li: ({ children }) => (
+                  <li className="text-sm text-brand-charcoal leading-relaxed flex gap-2">
+                    <span className="text-brand-orange mt-1">•</span>
+                    <span>{children}</span>
+                  </li>
+                ),
+                strong: ({ children }) => (
+                  <strong className="font-bold text-brand-black">{children}</strong>
+                ),
+              }}
+            >
+              {product.longDescription}
+            </ReactMarkdown>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
