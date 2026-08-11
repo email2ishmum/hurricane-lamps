@@ -49,7 +49,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative h-[34vh] min-h-[240px] md:h-[65vh] lg:h-[75vh] overflow-hidden bg-brand-black">
+      <section className="relative h-[40vh] min-h-[280px] md:h-[65vh] lg:h-[75vh] overflow-hidden bg-brand-black">
         <motion.div 
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -59,7 +59,7 @@ export default function Home() {
           <img 
             src={HERO_IMAGE || null} 
             alt="Hurricane Lamps Hero" 
-            className="w-full h-full object-cover opacity-80"
+            className="w-full h-full object-cover object-bottom md:object-center opacity-80"
             referrerPolicy="no-referrer"
             loading="eager"
           />
