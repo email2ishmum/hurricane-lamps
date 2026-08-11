@@ -58,6 +58,7 @@ export async function onRequestGet(context) {
         id: product.id,
         name: product.name,
         description: product.description,
+        longDescription: product.long_description || '',
         priceDiscount: product.price_discount || 0,
         priceOriginal: product.price_original || 0,
         stock: product.stock || 0,
